@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<title>AXL Rental</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="">
+	<meta name="author" content="Phoenixcoded" />
+	<!-- Favicon icon -->
+	<link rel="icon" href="{% static 'image/p.png' %}" type="image/png">
+
+	<!-- vendor css -->
+	<link rel="stylesheet" href="{% static 'assets2/css/style.css' %}">
+	
+	
+
+
+</head>
+
+<!-- [ auth-signin ] start -->
+<div class="auth-wrapper">
+	<div class="auth-content text-center">
+		<img src="{% static 'image/p.png' %}" alt=""  class="img-fluid mb-4" height="100" width="100">
+        <div class="card borderless">
+			<div class="row align-items-center text-center">
+				<div class="col-md-12">
+					<div class="card-body">
+                        <form action="" method="post">
+                            {%csrf_token%}
+                            <h4 class="f-w-400">Sign up</h4>
+                            <hr>
+                            <div class="form-group mb-3">
+                                <input type="text" class="form-control" id="Username" placeholder="Username" name="username">
+                            </div>
+                            <div class="form-group mb-3">
+                                <input type="text" class="form-control" id="Email" placeholder="Email address" name="email">
+                            </div>
+                            <div class="form-group mb-4">
+                                <input type="password" class="form-control" id="Password" placeholder="Password" name="password1">
+                            </div>
+                            <div class="form-group mb-4">
+                                <input type="password" class="form-control" id="Password" placeholder="Confirm Password" name="password2">
+                            </div>
+                            <!-- <button class="btn btn-primary btn-block mb-4">Sign up</button> -->
+                            <input type="submit" class="btn btn-block btn-primary mb-4" value="Sign up">
+                        </form>
+						<hr>
+						<p class="mb-2">Already have an account? <a href="{% url 'login' %}" class="f-w-400">Signin</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- [ auth-signin ] end -->
+
+<!-- Required Js -->
+<script src="{% static 'assets2/js/vendor-all.min.js' %}"></script>
+<script src="{% static 'assets2/js/plugins/bootstrap.min.js' %}"></script>
+
+
+
+</body>
+
+</html>

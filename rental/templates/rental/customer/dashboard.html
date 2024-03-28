@@ -1,0 +1,28 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Customer
+
+{% endblock %} 
+
+
+{% block content %} 
+
+<h1>Available Cars</h1>
+<div class="row"> 
+    <div class="col-sm-4">
+        <div class="card">
+            <img class="img-fluid card-img-top" src="{% static 'image/renbg.jpg' %}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title that wraps to a new line</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <button class="btn  btn-primary">View More</button>
+                <button class="btn  btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>    
+</div>
+
+{% endblock %}
