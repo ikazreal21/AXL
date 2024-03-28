@@ -12,17 +12,20 @@ AXL Rental - Customer
 
 <h1>Available Cars</h1>
 <div class="row"> 
-    <div class="col-sm-4">
+    {% for car in cars %}
+    <div class="col-sm-3">
         <div class="card">
-            <img class="img-fluid card-img-top" src="{% static 'image/renbg.jpg' %}" alt="Card image cap">
+            <img class="img-fluid card-img-top" src="{{car.car_image.url}}" alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title">Card title that wraps to a new line</h5>
-                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <button class="btn  btn-primary">View More</button>
-                <button class="btn  btn-danger">Delete</button>
+                <h5 class="card-title">{{car.car_name}}</h5>
+                <p class="card-text"><b>{{car.car_license_plate}}</b></p>
+                <h4 class="card-text"><b>₱{{car.price}}</b></h4>
+                <a class="btn  btn-primary" href="{% url 'book' car.car_id %}">Book</a>
+                <!-- <a class="btn  btn-danger" href="">View Car</a> -->
             </div>
         </div>
     </div>    
+    {% endfor %}
 </div>
 
 {% endblock %}

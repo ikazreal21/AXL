@@ -17,17 +17,3 @@ class BookingForm(ModelForm):
         model = Booking
         fields = '__all__'
         exclude = ['booking_id', 'customer']
-        widgets = {
-            'car': forms.Select(attrs={'class': 'form-control'}),
-            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-        }
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        car = cleaned_data.get('car')
-        start_dates = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-        if start_dates and end_date and start_dates > end_date:
-            raise ValidationError("End date must be greater than start date")
-        return cleaned_data

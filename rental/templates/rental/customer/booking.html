@@ -1,0 +1,146 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Book
+
+{% endblock %} 
+
+
+{% block content %} 
+
+<div class="row">
+    <script>
+        function myFunction() {
+        // Get the checkbox
+        var checkBox1 = document.getElementById("is_driver");
+        // var checkBox2 = document.getElementById("inlineRadio2");
+        // var checkBox2 = document.getElementById("inlineRadio2");
+        // Get the output text
+        var driver_select = document.getElementById("driver_select");
+        var license = document.getElementById("license");
+        var valid_id = document.getElementById("valid_id");
+
+        // If the checkbox is checked, display the output text
+        console.log(checkBox1.checked);
+        // if (checkBox2.checked == true){
+        //     file.style.display = "block";
+        // } else {
+        //     file.style.display = "none";
+        // }
+
+        if (checkBox1.checked == true){
+            driver_select.style.display = "block";
+            license.style.display = "none";
+            valid_id.style.display = "flex";
+        } else {
+            driver_select.style.display = "none";
+            license.style.display = "flex";
+            valid_id.style.display = "none";
+        }
+    }
+    </script>
+
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            <h4>{{car.car_name}}</h4>
+            <h5>{{car.price}}</h5>
+            <div class="form-group">
+                <img src="{{car.car_image.url}}" alt="test" width="350" height="300">
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="form-group mr-2">
+                    <label for="" class="label">Pick-up date</label>
+                    <input type="text" class="form-control" id="book_pick_date" placeholder="From" name="booking_start_date">
+                </div>
+                <div class="form-group d-sta">
+                    <label for="" class="label">Drop-off date</label>
+                    <input type="text" class="form-control" id="book_off_date" placeholder="To" name="booking_end_date">
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_toll" name="is_toll">
+                <label class="form-check-label" for="is_toll">Will you use Express Ways?</label>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_driver" name="is_driver" onclick="myFunction()">
+                <label class="form-check-label" for="is_driver">Do you need driver?</label>
+            </div>
+            <div class="form-group" style="display: none;" id="driver_select">
+                <label for="exampleFormControlSelect1">Pick a Driver</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="driver">
+                    {% for driver in drivers %}
+                        <option value="{{driver}}">{{driver.driver_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group mb-3" style="display: flex;" id="license">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Upload License</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="license_id" name="customer_license_id">
+                    <label class="custom-file-label" for="license_id">Choose file</label>
+                </div>
+            </div>
+            <div class="input-group mb-3" style="display: none;" id="valid_id">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Upload Valid ID</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="valid_id" name="customer_valid_id">
+                    <label class="custom-file-label" for="valid_id">Choose file</label>
+                </div>
+            </div>
+            <div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="true" checked>
+                    <label class="form-check-label" for="gridRadios1">Cash</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="false">
+                    <label class="form-check-label" for="gridRadios2">GCash</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Customers Note</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="customer_note"></textarea>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                <label class="form-check-label" for="terms">Click this that you agree with our <a href="{% url 'terms-and-conditions' %}">terms and conditions</a></label>
+            </div>
+            <button onclick="return confirm('Are you sure you want to book this car?')" type="submit" class="btn  btn-primary">Book the Car</button>
+            {% if messages %}
+                {% for message in messages %}
+                    <script>
+                        alert("{{message}}");
+                    </script>
+                {% endfor %}
+            {% endif %}
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<script src="{% static 'assets1/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery-migrate-3.0.1.min.js' %}"></script>
+<script src="{% static 'assets1/js/popper.min.js' %}j"></script>
+<script src="{% static 'assets1/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.easing.1.3.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.stellar.min.js' %}"></script>
+<script src="{% static 'assets1/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'assets1/js/aos.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'assets1/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'assets1/js/scrollax.min.js' %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+<script src="{% static 'assets1/js/google-map.js' %}"></script>
+<script src="{% static 'assets1/js/main.js' %}"></script>
+
+{% endblock %}
