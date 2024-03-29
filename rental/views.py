@@ -19,18 +19,23 @@ from .models import *
 from .forms import *
 
 def Home(request):
+    car = Cars.objects.filter(is_available=True).all()
+    # date = datetime.now()
+    # print(date.date())
+    context = {'cars': car}
     if request.user.is_authenticated:
         if request.user.is_customer:
             return redirect('dashboard')
         else:
             return redirect('driver-dashboard')
-    return render(request, 'rental/index.html')
+        
+    return render(request, 'rental/index.html' , context)
 
 @login_required(login_url='login')
 def CustomerDashboard(request):
     car = Cars.objects.filter(is_available=True).all()
-    date = datetime.now()
-    print(date.date())
+    # date = datetime.now()
+    # print(date.date())
     context = {'cars': car}
     return render(request, 'rental/customer/dashboard.html', context)
     # return render(request, 'rental/base.html')

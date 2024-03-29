@@ -1,8 +1,10 @@
 {% load static %}
+{% load pwa %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AXL Rental</title>
+    {% progressive_web_app_meta %}
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -137,27 +139,29 @@
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row">
+          {% for car in cars %}
           <div class="col-md-4">
             <div class="car-wrap rounded ftco-animate">
               <div
                 class="img rounded d-flex align-items-end"
-                style="background-image: url('{{ url }}')"
+                style="background-image: url('{{ car.car_image.url }}')"
               ></div>
               <div class="text">
                 <h2 class="mb-0">
-                  <a href="">Mercedes Grand Sedan</a>
+                  <a href="">{{car.car_name}}</a>
                 </h2>
                 <div class="d-flex mb-3">
-                  <span class="cat">Cheverolet</span>
-                  <p class="price ml-auto">$500 <span>/day</span></p>
+                  <span class="cat"><b>{{car.car_model}}</b></span>
+                  <p class="price ml-auto">₱{{car.price}}</p>
                 </div>
                 <p class="d-flex mb-0 d-block">
-                  <a href="#" class="btn btn-primary py-2 mr-1">Book now</a>
-                  <a href="" class="btn btn-secondary py-2 ml-1">Details</a>
+                  <a href="{% url 'login' %}" class="btn btn-primary py-2 mr-1">Book now</a>
+                  <a href="{% url 'login' %}" class="btn btn-secondary py-2 ml-1">Details</a>
                 </p>
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
       </div>
     </section>

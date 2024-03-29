@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-660j0_v&3r)r*aj__r8t88eweat6j646d7f=fp0a5w@*u70)kp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "axl-rentals-f3b7283f1ce7.herokuapp.com"]
+
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "cloudinary",
     'rental',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +87,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+import dj_database_url
+
+DATABASES['default'] = dj_database_url.parse("postgres://dqqkantciphdph:b181b00f26ad193baf8d49f7126c0a3fc33677592315031441b1c1e60a8e75d1@ec2-52-54-200-216.compute-1.amazonaws.com:5432/d4cvlr68ts434d", conn_max_age=600)
 
 
 # Password validation
@@ -143,3 +150,34 @@ CLOUDINARY_STORAGE = {
     "API_KEY": "964986345641993",
     "API_SECRET": "sDSJ1IXtdVjMrMAkGxABuvS2wmo",
 }
+
+
+PWA_APP_NAME = 'AXL Car Rental'
+PWA_APP_DESCRIPTION = "Rent a car with ease."
+PWA_APP_THEME_COLOR = '#0A0302'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/image/p.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/image/p.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': '/static/image/p.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-PH'
