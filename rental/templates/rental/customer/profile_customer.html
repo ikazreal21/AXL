@@ -1,0 +1,109 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Book
+
+{% endblock %} 
+
+
+{% block content %} 
+
+<div class="row">
+    <script>
+        function myFunction() {
+        // Get the checkbox
+        var checkBox1 = document.getElementById("is_driver");
+        // var checkBox2 = document.getElementById("inlineRadio2");
+        // var checkBox2 = document.getElementById("inlineRadio2");
+        // Get the output text
+        var driver_select = document.getElementById("driver_select");
+        var license = document.getElementById("license");
+        var valid_id = document.getElementById("valid_id");
+
+        // If the checkbox is checked, display the output text
+        console.log(checkBox1.checked);
+        // if (checkBox2.checked == true){
+        //     file.style.display = "block";
+        // } else {
+        //     file.style.display = "none";
+        // }
+
+        if (checkBox1.checked == true){
+            driver_select.style.display = "block";
+            license.style.display = "none";
+            valid_id.style.display = "flex";
+        } else {
+            driver_select.style.display = "none";
+            license.style.display = "flex";
+            valid_id.style.display = "none";
+        }
+    }
+    </script>
+
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" class="form-control" placeholder="Full Name" name="customer_name" value="{{customer.customer_name}}" required />   
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" placeholder="Email" name="customer_email" value="{{customer.customer_email}}" required>
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="number" min="0" class="form-control" placeholder="Phone Number" name="customer_phone" value="{{customer.customer_phone}}" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Address</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="customer_address">{{customer.customer_address}}</textarea>
+            </div>
+            <div class="input-group mb-3" style="display: flex;" id="license">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Upload License</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="license_id" name="customer_license_valid_id" required>
+                    <label class="custom-file-label" for="license_id">Choose file</label>
+                </div>
+            </div>
+            {% if customer.customer_license_valid_id %}
+                <div class="form-group">
+                    <img src="{{customer.customer_license_valid_id.url}}" alt="test" width="400" height="300">
+                </div>
+            {% endif %}
+            <button onclick="return confirm('Are you sure you want to save this Information?')" type="submit" class="btn  btn-primary">Save</button>
+            {% if messages %}
+                {% for message in messages %}
+                    <script>
+                        alert("{{message}}");
+                    </script>
+                {% endfor %}
+            {% endif %}
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<script src="{% static 'assets1/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery-migrate-3.0.1.min.js' %}"></script>
+<script src="{% static 'assets1/js/popper.min.js' %}j"></script>
+<script src="{% static 'assets1/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.easing.1.3.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.stellar.min.js' %}"></script>
+<script src="{% static 'assets1/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'assets1/js/aos.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'assets1/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'assets1/js/scrollax.min.js' %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+<script src="{% static 'assets1/js/google-map.js' %}"></script>
+<script src="{% static 'assets1/js/main.js' %}"></script>
+
+{% endblock %}

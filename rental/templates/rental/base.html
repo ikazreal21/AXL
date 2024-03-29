@@ -32,6 +32,8 @@
     rel="stylesheet"
     href="{% static 'assets1/css/jquery.timepicker.css' %}"
   />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
     
     
 
@@ -45,31 +47,40 @@
                     	<label>Dashboard</label>
                     </li>
                     {% if request.user.is_customer %}   
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Bookings</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-check"></i></span><span class="pcoded-mtext">Return My Car</span></a>
-                    </li>
+                        {% if request.user.customer.is_first_time %}
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'pending-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Bookings</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'booking-history' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'late-return' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-info"></i></span><span class="pcoded-mtext">Late Return</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'current-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-check"></i></span><span class="pcoded-mtext">Return My Car</span></a>
+                            </li>
+                        {% endif %}
                     {% else %}
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Bookings</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-check"></i></span><span class="pcoded-mtext">Availability</span></a>
-                    </li>
+                        {% if request.user.driver.is_first_time %}
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Bookings</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-check"></i></span><span class="pcoded-mtext">Availability</span></a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
 
@@ -94,6 +105,11 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
+                <li>
+                    <div class="dropdown drp-user">
+                        <a href="{% url 'profile' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Profile</span></a>
+                    </div>
+                </li>
                 <li>
                     <div class="dropdown drp-user">
                         <a href="{% url 'logout' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-out"></i></span><span class="pcoded-mtext">Logout</span></a>

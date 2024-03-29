@@ -1,0 +1,54 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Track Car
+
+{% endblock %} 
+
+
+{% block content %} 
+<style>
+    .marker {
+    background-image: url('https://res.cloudinary.com/dmagk9gck/image/upload/v1711750135/pointer_slbe5t.png');
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    }
+</style>
+
+<h1>Maps</h1>
+<!-- <div class="row"> -->
+    <div id="map" style='height:400px'></div>
+<!-- </div> -->
+<script>
+    const lng = '{{lng}}';
+    const lat = '{{lat}}';
+    const feature = {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [lng, lat]
+        }
+    };
+    // console.log('{{location|escapejs}}');
+    mapboxgl.accessToken = "pk.eyJ1IjoiZXhwemFrIiwiYSI6ImNsdWQ2YTN5YTBiajAyaW92bnl4aTczZW0ifQ.dqSv0NMGbEGox1u6mbvFkQ";
+    var map = new mapboxgl.Map({
+     container: 'map',
+     style: 'mapbox://styles/mapbox/streets-v10',
+     center: [lng, lat],
+     zoom: 15
+    });
+
+
+    const el = document.createElement('div');
+    el.className = 'marker';
+
+    // make a marker for each feature and add to the map
+    new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+</script>
+
+{% endblock %}

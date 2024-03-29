@@ -1,0 +1,76 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - GCash Billing Page
+
+{% endblock %} 
+
+
+{% block content %} 
+    <style>
+        .billing-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .billing-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .billing-details {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .billing-instructions {
+            margin-top: 20px;
+        }
+        .billing-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+    <div class="billing-container">
+        <div class="billing-header">
+            <h1>GCash Payment</h1>
+        </div>
+        <div class="billing-details">
+            <h2>Transaction Details</h2>
+            {% if booking.booking_status == "Late" %}
+                <p><strong>Penalty Amount:</strong> ₱{{booking.penalty}}</p>
+            {% else %}
+                <p><strong>Amount:</strong> ₱{{booking.price}}</p>
+            {% endif %}
+            <h5><strong>Description:</strong><b> <u> {{booking.car.car_name}} </u> </b></h5>
+            <h5><strong>Schedule:</strong> {{booking.description}}</h5>
+        </div>
+        <div class="billing-instructions">
+            <form action="" method="post">
+                {% csrf_token %}
+                <h2>Payment Instructions</h2>
+                <p>To complete the payment using GCash, follow these steps:</p>
+                <ol>
+                    <li>Open the GCash app on your mobile device.</li>
+                    <li>Select 'Send Money' from the main menu.</li>
+                    <li>Enter the GCash number: <strong>Enter GCash Number Here</strong>.</li>
+                    {% if booking.booking_status == "Late" %}
+                    <li>Enter the amount to pay  <strong>(₱{{booking.penalty}})</strong>.</li>
+                    {% else %}
+                    <li>Enter the amount to pay  <strong>(₱{{booking.price}})</strong>.</li>
+                    {% endif %}
+                    <li>Enter the reference number: <input type="text" id="referenceNumber" placeholder="Enter Reference Number" name="reference_number" required /></li>
+                    <li>Confirm the transaction.</li>
+                    <li>Once payment is successful, your order will be processed.</li>
+                </ol>
+                <button onclick="return confirm('Do you Confirm the Payment?')" type="submit" class="btn btn-primary">Submit Payment</button>
+                {% if booking.booking_status != "Late" %}
+                    <a onclick="return confirm('This will also delete the booking, Are you sure to Cancel?')" href="{% url 'cancel-booking' booking.booking_id %}" class="btn btn-danger">Cancel</a>
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

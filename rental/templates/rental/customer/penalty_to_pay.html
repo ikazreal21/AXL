@@ -3,7 +3,7 @@
 
 {% block title %} 
 
-AXL Rental - Booking History
+AXL Rental - Booking Pentalty
 
 {% endblock %} 
 
@@ -41,10 +41,10 @@ AXL Rental - Booking History
                     {% else %}
                         <td>Gcash</td>
                     {% endif %}
-                    <td>₱{{booking.price}}</td>
+                    <td>₱{{booking.penalty}}</td>
                     <td>{{booking.booking_status}}</td>
                     <td>
-                        <a class="btn  btn-primary" href="{% url 'booking-details' booking.booking_id %}">View Booking Details</a>
+                        <a class="btn  btn-primary" href="{% url 'billing' booking.booking_id %}">Gcash Pay Here</a>
                     </td>
                 </tr>
                 {% endfor %}

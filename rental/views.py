@@ -1,3 +1,5 @@
+from multiprocessing import context
+from operator import inv
 import re
 from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
@@ -7,8 +9,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from datetime import date, datetime
+from pytz import timezone
 
+import requests 
+from django.db.models import Q
 
 from .models import *
 from .forms import *
@@ -23,7 +28,9 @@ def Home(request):
 
 @login_required(login_url='login')
 def CustomerDashboard(request):
-    car = Cars.objects.all()
+    car = Cars.objects.filter(is_available=True).all()
+    date = datetime.now()
+    print(date.date())
     context = {'cars': car}
     return render(request, 'rental/customer/dashboard.html', context)
     # return render(request, 'rental/base.html')
@@ -55,16 +62,21 @@ def CustomerBooking(request, car_id):
             form.save(commit=False).car = car
             form.save(commit=False).booking_start_date = start
             form.save(commit=False).booking_end_date = end
-            form.save(commit=False).booking_status = "Pending"
-            if is_cash == "true":
-                form.save(commit=False).is_cash = True
+            form.save(commit=False).booking_status = "Pending"           
+            car.is_available = False
+            car.save()
             calculate_total = form.save()
             if is_toll == "true":
                 calculate_total.booking_total_price += calculate_total.toll_fee
             total = delta.days * car.car_price
             print(total)
             calculate_total.booking_total_price += total
-            calculate_total.save()
+            if is_cash == "true":
+                calculate_total.is_cash = True
+                calculate_total.save()
+            else:
+                calculate_total.save()
+                return redirect('billing', booking_id=calculate_total.booking_id)
             return redirect('dashboard')
         else:
             system_messages = messages.get_messages(request)
@@ -86,7 +98,7 @@ def PendingBooking(request):
 
 @login_required(login_url='login')
 def BookingHistory(request):
-    booking = Booking.objects.filter(booking_status="Confirmed")
+    booking = Booking.objects.filter(booking_status="Returned")
     context = {'bookings': booking}
     return render(request, 'rental/customer/booking_history.html', context)
 
@@ -94,12 +106,27 @@ def BookingHistory(request):
 def CurrentBooking(request):
     booking = Booking.objects.filter(booking_status="Confirmed")
     context = {'bookings': booking}
-    return render(request, 'rental/customer/current_booking.html', context)
+    return render(request, 'rental/customer/return_mycar.html', context)
+
+@login_required(login_url='login')
+def LateReturnBooking(request):
+    booking = Booking.objects.filter(booking_status="Late")
+    context = {'bookings': booking}
+    return render(request, 'rental/customer/penalty_to_pay.html', context)
 
 @login_required(login_url='login')
 def ReturnCar(request, booking_id):
     booking = Booking.objects.get(booking_id=booking_id)
-    booking.booking_status = "Returned"
+    end = booking.booking_end_date
+    date = datetime.now(timezone('Asia/Manila'))
+    end_date = datetime.strptime(str(end), '%Y-%m-%d')
+    current_date = datetime.strptime(str(date.date()), '%Y-%m-%d')
+    delta = current_date - end_date
+    if delta.days > 0:
+        booking.total_penalty = delta.days * 5000
+        booking.booking_status = "Late"
+    else:
+        booking.booking_status = "Returned"
     booking.save()
     return redirect('dashboard')
 
@@ -116,6 +143,73 @@ def ConfirmBooking(request, booking_id):
     booking.save()
     return redirect('pending-booking')
 
+@login_required(login_url='login')
+def Billing(request, booking_id):
+    booking = Booking.objects.get(booking_id=booking_id)
+    if request.method == 'POST':
+        reference_number = request.POST.get("reference_number")
+        if booking.booking_status == "Late": 
+           booking.reference_number_penalty = reference_number
+           booking.booking_status = "Returned"
+        else:    
+            booking.reference_number = reference_number
+        booking.save()
+        return redirect('dashboard')
+    context = {'booking': booking}
+    return render(request, 'rental/customer/billing.html', context)
+
+def CancelBooking(request, booking_id):
+    booking = Booking.objects.get(booking_id=booking_id)
+    car = Cars.objects.get(car_id=booking.car.car_id)
+    car.is_available = True
+    car.save()
+    booking.delete()
+    return redirect('dashboard')
+
+def Invoice(request, booking_id):
+    booking = Booking.objects.get(booking_id=booking_id)
+    date = datetime.now(timezone('Asia/Manila'))
+    invoice_number = str(booking.booking_id)
+    invoice_number = invoice_number.split("-")
+    print(invoice_number)
+    context = {'booking': booking, 'date': date.strftime("%B %d, %Y") , 'invoice_number': invoice_number[0]}
+    return render(request, 'rental/customer/invoice.html', context)
+
+@login_required(login_url='login')
+def CustomerProfile(request):
+    customer = Customer.objects.get(user=request.user)
+    form = CustomerForm(instance=customer)
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            form.save(commit=False).is_first_time = False
+            form.save()
+            return redirect('dashboard')
+    context = {'form': form, 'customer': customer}
+    return render(request, 'rental/customer/profile_customer.html', context)
+
+# ADMIN
+@login_required(login_url='login')
+def CurrentBookingAdmin(request):
+    booking = Booking.objects.filter(booking_status="Confirmed")
+    context = {'bookings': booking}
+    return render(request, 'rental/admin/current_booking.html', context)
+
+
+@login_required(login_url='login')
+def TrackCar(request):
+    # booking = Booking.objects.filter(booking_status="Confirmed")
+    device_name = "Device 2"
+    url = f'https://tracker-a9fe1-default-rtdb.firebaseio.com/locations/{device_name}.json?auth=TRLIkBzUyzxK37fOK2rRTWdjoZjosKEhzPlIMfAa'
+    location = requests.get(url) 
+    location = location.json()
+    lat = location['lat']
+    lng = location['lng']
+    print(lat)
+    print(lng)
+    context = {'lat': lat, 'lng': lng}
+    return render(request, 'rental/maps.html', context)
+
 
 # AUTH
 def Register(request):
@@ -123,8 +217,9 @@ def Register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            username = form.save()
             user = form.cleaned_data.get('username')
+            Customer.objects.create(user=username)
             messages.success(request, f'Account was created for {user}')
             return redirect('login')
     context = {'form': form}
@@ -135,9 +230,13 @@ def Login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        userDet = Customer.objects.get(user=user)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            if userDet.is_first_time:
+                return redirect("profile")
+            else:
+                return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
     context = {}

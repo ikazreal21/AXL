@@ -1,4 +1,5 @@
 from email.policy import default
+from math import e
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
@@ -20,6 +21,7 @@ class Cars(models.Model):
     car_price = models.IntegerField()
     car_image = models.ImageField(upload_to='uploads/cars', null=True, blank=True)
     is_available = models.BooleanField(default=True)
+    device_name = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:  
         verbose_name_plural = 'Cars'
@@ -42,6 +44,7 @@ class Customer(models.Model):
     customer_phone = models.CharField(max_length=255, null=True, blank=True)
     customer_address = models.CharField(max_length=255, null=True, blank=True)
     customer_license_valid_id = models.ImageField(upload_to='uploads/license', null=True, blank=True)
+    is_first_time = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.customer_name} - {self.customer_email}"
@@ -56,6 +59,7 @@ class Driver(models.Model):
     driver_price = models.IntegerField()
     driver_availability = models.BooleanField(default=True)
     driver_license_valid_id = models.ImageField(upload_to='uploads/license', null=True, blank=True)
+    is_first_time = models.BooleanField(default=True)
 
     def price(self):
         total_amount = float(self.driver_price)
@@ -76,10 +80,12 @@ class Booking(models.Model):
     booking_end_date = models.DateField()
     booking_status = models.CharField(max_length=255, null=True, blank=True)
     reference_number = models.CharField(max_length=255, null=True, blank=True)
+    reference_number_penalty = models.CharField(max_length=255, null=True, blank=True)
     customer_note = models.TextField(null=True, blank=True)
     customer_license_id = models.ImageField(upload_to='uploads/license', null=True, blank=True)
     customer_valid_id = models.ImageField(upload_to='uploads/valid_id', null=True, blank=True)
     toll_fee = models.IntegerField(default=1000 , null=True, blank=True)
+    total_penalty = models.IntegerField(default=0, null=True, blank=True)
     booking_total_price = models.IntegerField(default=0, null=True, blank=True)
     is_pickup = models.BooleanField(default=False)
     is_cash = models.BooleanField(default=False)
@@ -89,6 +95,27 @@ class Booking(models.Model):
             total_amount = float(self.booking_total_price)
             total_amountstr = "{:,.2f}".format(total_amount)
             return total_amountstr
+    
+    def penalty(self):
+        if self.total_penalty:
+            total_amount = float(self.total_penalty)
+            total_amountstr = "{:,.2f}".format(total_amount)
+            return total_amountstr
+    
+    def total(self):
+        if self.booking_total_price and self.total_penalty:
+            total_amount = float(self.booking_total_price) + float(self.total_penalty)
+            total_amountstr = "{:,.2f}".format(total_amount)
+            return total_amountstr
+    
+    def startdate(self):
+        return self.booking_start_date.strftime("%B %d, %Y")
+    
+    def enddate(self):
+        return self.booking_end_date.strftime("%B %d, %Y")
 
+    def description(self):
+        return f"From: {self.booking_start_date} - To: {self.booking_end_date}"
+    
     def __str__(self):
         return f"{self.car} - {self.customer} - {self.driver} - {self.booking_start_date} - {self.booking_end_date} - {self.booking_status} - {self.booking_total_price}"

@@ -17,3 +17,9 @@ class BookingForm(ModelForm):
         model = Booking
         fields = '__all__'
         exclude = ['booking_id', 'customer']
+
+class CustomerForm(ModelForm):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+        exclude = ['user', 'customer_id']

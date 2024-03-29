@@ -1,0 +1,59 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Details
+
+{% endblock %} 
+
+
+{% block content %} 
+    <style>
+        .billing-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .billing-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .billing-details {
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .billing-instructions {
+            margin-top: 20px;
+        }
+        .billing-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+    <div class="billing-container">
+        <div class="billing-header">
+            <h1>Booking Details</h1>
+        </div>
+        <div class="billing-details">
+            <h2>Transaction Details</h2>
+            <img src="{{booking.car.car_image.url}}" alt="" srcset="">
+            <h3><strong>Status: </strong> {{booking.booking_status}}</h3>
+            <p><strong>Amount:</strong> ₱{{booking.price}}</p>
+            <h5><strong>Description:</strong><b> <u> {{booking.car.car_name}} </u> </b></h5>
+            <h5><strong>Schedule:</strong> {{booking.description}}</h5>
+            
+
+            <a href="{% url 'pending-booking' %}" class="btn btn-primary">Back</a>
+            {% if booking.booking_status == "Pending" %}
+            <a onclick="return confirm('This will also delete the booking, Are you sure to Cancel?')" href="{% url 'cancel-booking' booking.booking_id %}" class="btn btn-danger">Cancel</a>
+            {% endif %}
+            {% if booking.booking_status == "Returned" %}
+            <a href="{% url 'invoice' booking.booking_id %}" class="btn btn-primary">Invoice</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
