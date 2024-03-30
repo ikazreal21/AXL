@@ -73,7 +73,7 @@ AXL Rental - Book
             </div>
             {% if customer.customer_license_valid_id %}
                 <div class="form-group">
-                    <img src="{{customer.customer_license_valid_id.url}}" alt="test" width="400" height="300">
+                    <img src="{{customer.customer_license_valid_id.url}}" alt="test" width="300" height="300">
                 </div>
             {% endif %}
             <button onclick="return confirm('Are you sure you want to save this Information?')" type="submit" class="btn  btn-primary">Save</button>
