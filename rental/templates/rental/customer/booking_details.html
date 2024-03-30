@@ -48,7 +48,8 @@ AXL Rental - Details
 
             <a href="{% url 'pending-booking' %}" class="btn btn-primary">Back</a>
             {% if booking.booking_status == "Pending" %}
-            <a onclick="return confirm('This will also delete the booking, Are you sure to Cancel?')" href="{% url 'cancel-booking' booking.booking_id %}" class="btn btn-danger">Cancel</a>
+            <!-- <a onclick="return confirm('This will also delete the booking, Are you sure to Cancel?')" href="{% url 'cancel-booking' booking.booking_id %}" class="btn btn-danger">Cancel</a> -->
+            <a href="{% url 'cancel-booking' booking.booking_id %}" class="btn btn-danger">Cancel</a>
             {% endif %}
             {% if booking.booking_status == "Returned" %}
             <a href="{% url 'invoice' booking.booking_id %}" class="btn btn-primary">Invoice</a>
