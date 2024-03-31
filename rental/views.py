@@ -363,24 +363,27 @@ def Login(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         custominfo = CustomUser.objects.filter(username=user)
-        if custominfo[0].is_superuser:
+        if len(custominfo):
+            if custominfo[0].is_superuser:
+                if user is not None:
+                    login(request, user)
+                    return redirect('admin-dashboard')
+                else:
+                    messages.info(request, 'Username OR password is incorrect')
+            if custominfo[0].is_customer:
+                userDet = Customer.objects.filter(user=user)
+                profile_redirect = 'profile'
+            else:
+                userDet = Driver.objects.filter(user=user)
+                profile_redirect = 'driver-profile'
             if user is not None:
                 login(request, user)
-                return redirect('admin-dashboard')
+                if userDet[0].is_first_time:
+                    return redirect(profile_redirect)
+                else:
+                    return redirect('home')
             else:
                 messages.info(request, 'Username OR password is incorrect')
-        if custominfo[0].is_customer:
-            userDet = Customer.objects.filter(user=user)
-            profile_redirect = 'profile'
-        else:
-            userDet = Driver.objects.filter(user=user)
-            profile_redirect = 'driver-profile'
-        if user is not None:
-            login(request, user)
-            if userDet[0].is_first_time:
-                return redirect(profile_redirect)
-            else:
-                return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
     context = {}
