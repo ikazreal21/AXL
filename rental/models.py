@@ -56,15 +56,16 @@ class Driver(models.Model):
     driver_email = models.EmailField(max_length=255, null=True, blank=True)
     driver_phone = models.CharField(max_length=255, null=True, blank=True)
     driver_address = models.CharField(max_length=255, null=True, blank=True)
-    driver_price = models.IntegerField()
+    driver_price = models.IntegerField(null=True, blank=True)
     driver_availability = models.BooleanField(default=True)
     driver_license_valid_id = models.ImageField(upload_to='uploads/license', null=True, blank=True)
     is_first_time = models.BooleanField(default=True)
 
     def price(self):
-        total_amount = float(self.driver_price)
-        total_amountstr = "{:,.2f}".format(total_amount)
-        return total_amountstr
+        if self.driver_price:
+            total_amount = float(self.driver_price)
+            total_amountstr = "{:,.2f}".format(total_amount)
+            return total_amountstr
 
     def __str__(self):
         return f"{self.driver_name} - {self.driver_email}"
