@@ -52,7 +52,7 @@ AXL Rental - Details
             <!-- <a href="{% url 'cancel-booking' booking.booking_id %}" class="btn btn-danger">Cancel</a> -->
             {% endif %}
             {% if booking.booking_status == "Returned" %}
-            <a href="{% url 'invoice' booking.booking_id %}" class="btn btn-primary">Invoice</a>
+            <a href="{% url 'invoice' booking.booking_id %}" class="btn btn-primary" target="_blank">Invoice</a>
             {% endif %}
         </div>
     </div>

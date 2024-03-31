@@ -1,3 +1,5 @@
+from dataclasses import is_dataclass
+from lib2to3.pgen2 import driver
 from multiprocessing import context
 from operator import inv
 import re
@@ -42,7 +44,10 @@ def CustomerDashboard(request):
 
 @login_required(login_url='login')
 def DriverDashboard(request):
-    return render(request, 'rental/driver/driver_dashboard.html')
+    driver = Driver.objects.get(user=request.user)
+    booking = Booking.objects.filter(driver=driver).filter(booking_status="Confirmed")
+    context = {'bookings': booking}
+    return render(request, 'rental/driver/driver_dashboard.html', context)
 
 @login_required(login_url='login')
 def CustomerBooking(request, car_id):
@@ -54,6 +59,7 @@ def CustomerBooking(request, car_id):
     if request.method == 'POST':
         is_toll = request.POST.get("is_toll")
         is_cash = request.POST.get("gridRadios")
+        is_driver = request.POST.get("is_driver")
         start = request.POST.get("booking_start_date")
         end = request.POST.get("booking_end_date")
         a = datetime.strptime(start, '%Y-%m-%d')
@@ -70,10 +76,21 @@ def CustomerBooking(request, car_id):
             form.save(commit=False).booking_status = "Pending"           
             car.is_available = False
             car.save()
+            if is_driver == "on":
+                print("Driver")
+                driver = request.POST.get("driver")
+                driver = Driver.objects.get(driver_id=driver)
+                carprice = car.car_price + driver.driver_price
+                form.save(commit=False).driver = driver
+                print(driver.driver_price)
+                print(carprice)
+            else:
+                carprice = car.car_price
             calculate_total = form.save()
-            if is_toll == "true":
+            if is_toll == "on":
                 calculate_total.booking_total_price += calculate_total.toll_fee
-            total = delta.days * car.car_price
+            total = delta.days * carprice
+            print(carprice)
             print(total)
             calculate_total.booking_total_price += total
             if is_cash == "true":
@@ -200,6 +217,39 @@ def CurrentBookingAdmin(request):
     context = {'bookings': booking}
     return render(request, 'rental/admin/current_booking.html', context)
 
+# Driver
+@login_required(login_url='login')
+def DriverProfile(request):
+    driver = Driver.objects.get(user=request.user)
+    form = DriverForm(instance=driver)
+    if request.method == 'POST':
+        form = DriverForm(request.POST, request.FILES, instance=driver)
+        if form.is_valid():
+            form.save(commit=False).is_first_time = False
+            form.save()
+            return redirect('driver-dashboard')
+    context = {'form': form, 'customer': driver}
+    return render(request, 'rental/driver/profile_driver.html', context)
+
+@login_required(login_url='login')
+def DriverBookingHistory(request):
+    driver = Driver.objects.get(user=request.user)
+    booking = Booking.objects.filter(driver=driver).filter(booking_status="Returned")
+    context = {'bookings': booking}
+    return render(request, 'rental/driver/booking_history.html', context)
+
+@login_required(login_url='login')
+def PendingDriverBooking(request):
+    driver = Driver.objects.get(user=request.user)
+    booking = Booking.objects.filter(driver=driver).filter(booking_status="Pending")
+    context = {'bookings': booking}
+    return render(request, 'rental/driver/pending_booking.html', context)
+
+# @login_required(login_url='login')
+# def CurrentDriverBooking(request):
+
+#     return render(request, 'rental/driver/current_booking.html', context)
+
 
 @login_required(login_url='login')
 def TrackCar(request):
@@ -231,15 +281,26 @@ def Register(request):
     return render(request, 'rental/register.html', context)
 
 def Login(request):
+    if request.user.is_authenticated:
+        if request.user.is_customer:
+            return redirect('dashboard')
+        else:
+            return redirect('driver-dashboard')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        userDet = Customer.objects.get(user=user)
+        custominfo = CustomUser.objects.get(username=user)
+        if custominfo.is_customer:
+            userDet = Customer.objects.get(user=user)
+            profile_redirect = 'profile'
+        else:
+            userDet = Driver.objects.get(user=user)
+            profile_redirect = 'driver-profile'
         if user is not None:
             login(request, user)
             if userDet.is_first_time:
-                return redirect("profile")
+                return redirect(profile_redirect)
             else:
                 return redirect('home')
         else:

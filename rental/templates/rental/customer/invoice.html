@@ -51,12 +51,21 @@
             <p>Address: {{booking.customer.customer_address|title}}</p>
             <p>Email: {{booking.customer.customer_email|title}}</p>
         </div>
+        {% if booking.driver %}
+        <div class="invoice-details">
+            <strong>Driver Details:</strong>
+            <p>Driver Name: {{booking.driver.driver_name|title}}</p>
+            <p>Address: {{booking.driver.driver_address|title}}</p>
+            <p>Email: {{booking.driver.driver_email|title}}</p>
+        </div>
+        {% endif %}
         <div class="invoice-details">
             <strong>Invoice Details:</strong>
             <p>Description: {{booking.car.car_name}}</p>
             <p>Total Penalty: ₱{{booking.penalty}}</p>
             <p>Total Booking Amount: ₱{{booking.price}}</p>
         </div>
+
         <div class="invoice-footer">
             <p><strong>Total:  ₱{{booking.total}}</strong></p>
         </div>

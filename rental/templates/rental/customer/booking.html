@@ -73,7 +73,7 @@ AXL Rental - Book
                 <label for="exampleFormControlSelect1">Pick a Driver</label>
                 <select class="form-control" id="exampleFormControlSelect1" name="driver">
                     {% for driver in drivers %}
-                        <option value="{{driver}}">{{driver.driver_name}}</option>
+                        <option value="{{driver.driver_id}}">{{driver.driver_name}} - {{driver.price}}/per day</option>
                     {% endfor %}
                 </select>
             </div>

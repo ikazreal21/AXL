@@ -11,69 +11,50 @@ AXL Rental - Profile
 {% block content %} 
 
 <div class="row">
-    <script>
-        function myFunction() {
-        // Get the checkbox
-        var checkBox1 = document.getElementById("is_driver");
-        // var checkBox2 = document.getElementById("inlineRadio2");
-        // var checkBox2 = document.getElementById("inlineRadio2");
-        // Get the output text
-        var driver_select = document.getElementById("driver_select");
-        var license = document.getElementById("license");
-        var valid_id = document.getElementById("valid_id");
-
-        // If the checkbox is checked, display the output text
-        console.log(checkBox1.checked);
-        // if (checkBox2.checked == true){
-        //     file.style.display = "block";
-        // } else {
-        //     file.style.display = "none";
-        // }
-
-        if (checkBox1.checked == true){
-            driver_select.style.display = "block";
-            license.style.display = "none";
-            valid_id.style.display = "flex";
-        } else {
-            driver_select.style.display = "none";
-            license.style.display = "flex";
-            valid_id.style.display = "none";
-        }
-    }
-    </script>
-
     <div class="col-md-4"></div>
     <div class="col-md-4">
         <form method="POST" enctype="multipart/form-data">
             {%csrf_token%}
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" class="form-control" placeholder="Full Name" name="customer_name" value="{{customer.customer_name}}" required />   
+                <input type="text" class="form-control" placeholder="Full Name" name="driver_name" value="{{customer.driver_name}}" required />   
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" class="form-control" placeholder="Email" name="customer_email" value="{{customer.customer_email}}" required>
+                <input type="email" class="form-control" placeholder="Email" name="driver_email" value="{{customer.driver_email}}" required>
             </div>
             <div class="form-group">
                 <label>Phone</label>
-                <input type="number" min="0" class="form-control" placeholder="Phone Number" name="customer_phone" value="{{customer.customer_phone}}" required>
+                <input type="number" min="0" class="form-control" placeholder="Phone Number" name="driver_phone" value="{{customer.driver_phone}}" required>
+            </div>
+            <div class="form-group">
+                <label>Price Per Day</label>
+                <input type="number" min="0" class="form-control" placeholder="Price" name="driver_price" value="{{customer.driver_price}}" required>
             </div>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">Address</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="customer_address">{{customer.customer_address}}</textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="driver_address">{{customer.driver_address}}</textarea>
+            </div>
+            <div class="form-group form-check">
+                {% if customer.driver_availability %}
+                    <input type="checkbox" class="form-check-input" id="is_driver" name="driver_availability" checked>
+                {% else %}
+                    <input type="checkbox" class="form-check-input" id="is_driver" name="driver_availability">
+                {% endif %}
+                <label class="form-check-label" for="is_driver">Are you available?</label>
             </div>
             <div class="input-group mb-3" style="display: flex;" id="license">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Upload License</span>
                 </div>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="license_id" name="customer_license_valid_id" required>
+                    <input type="file" class="custom-file-input" id="license_id" name="driver_license_valid_id" required>
                     <label class="custom-file-label" for="license_id">Choose file</label>
                 </div>
             </div>
-            {% if customer.customer_license_valid_id %}
+            {% if customer.driver_license_valid_id %}
                 <div class="form-group">
-                    <img src="{{customer.customer_license_valid_id.url}}" alt="test" width="300" height="300">
+                    <img src="{{customer.driver_license_valid_id.url}}" alt="test" width="300" height="300">
                 </div>
             {% endif %}
             <button onclick="return confirm('Are you sure you want to save this Information?')" type="submit" class="btn  btn-primary">Save</button>

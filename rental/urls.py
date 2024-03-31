@@ -10,20 +10,27 @@ urlpatterns = [
     path("", views.Home, name="home"),
     path("dashboard", views.CustomerDashboard, name="dashboard"),
     path("driver-dashboard", views.DriverDashboard, name="driver-dashboard"),
+
+    # Customer
     path("book/<str:car_id>", views.CustomerBooking, name="book"),
-    path("pending-booking", views.PendingBooking, name="pending-booking"),
     path("booking-history", views.BookingHistory, name="booking-history"),
     path("late-return", views.LateReturnBooking, name="late-return"),
     path("booking-details/<str:booking_id>", views.BookingDetails, name="booking-details"),
-    path("confirm-booking/<str:booking_id>", views.ConfirmBooking, name="confirm-booking"),
+    path("pending-booking", views.PendingBooking, name="pending-booking"),
     path("current-booking", views.CurrentBooking, name="current-booking"),
     path("return-car/<str:booking_id>", views.ReturnCar, name="return-car"),
     path("biling/<str:booking_id>", views.Billing, name="billing"),
-    path("cancel-booking/<str:booking_id>", views.CancelBooking, name="cancel-booking"),
     path("invoice/<str:booking_id>", views.Invoice, name="invoice"),
     path("profile", views.CustomerProfile, name="profile"),
-    # path("calendar", views.Calendar, name="calendar"),
 
+    # Admin
+    path("cancel-booking/<str:booking_id>", views.CancelBooking, name="cancel-booking"),
+    path("confirm-booking/<str:booking_id>", views.ConfirmBooking, name="confirm-booking"),
+
+    # Driver
+    path("driver-profile", views.DriverProfile, name="driver-profile"),
+    path("driver-booking-history", views.DriverBookingHistory, name="driver-booking-history"),
+    path("pending-driver-booking", views.PendingDriverBooking, name="pending-driver-booking"),
 
     # AUTH
     path("register/", views.Register, name="register"),

@@ -1,0 +1,52 @@
+{% extends 'rental/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Dashboard
+
+{% endblock %} 
+
+
+{% block content %} 
+
+<div class="card-body table-border-style">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Car Name</th>
+                    <th>Customer Name</th>
+                    <th>Start Booking Date</th>
+                    <th>End Booking Date</th>
+                    <th>Mode of Payment</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{booking.car.car_name}}</td>
+                    <td>{{booking.customer.customer_name | title}}</td>
+                    <td>{{booking.startdate}}</td>
+                    <td>{{booking.enddate}}</td>
+                    {% if booking.is_cash %}
+                        <td>Cash</td>
+                    {% else %}
+                        <td>Gcash</td>
+                    {% endif %}
+                    <td>₱{{booking.price}}</td>
+                    <td>{{booking.booking_status}}</td>
+                    <td>
+                        <a class="btn  btn-primary" href="{% url 'booking-details' booking.booking_id %}">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

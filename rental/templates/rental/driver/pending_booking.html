@@ -3,7 +3,7 @@
 
 {% block title %} 
 
-AXL Rental - Booking History
+AXL Rental - Pending Booking
 
 {% endblock %} 
 
@@ -16,7 +16,7 @@ AXL Rental - Booking History
             <thead>
                 <tr>
                     <th>Car Name</th>
-                    <th>Driver</th>
+                    <th>Customer Name</th>
                     <th>Start Booking Date</th>
                     <th>End Booking Date</th>
                     <th>Mode of Payment</th>
@@ -29,11 +29,7 @@ AXL Rental - Booking History
                 {% for booking in bookings %}
                 <tr>
                     <td>{{booking.car.car_name}}</td>
-                    {% if booking.driver %}
-                        <td>{{booking.driver.driver_name | title}}</td>
-                    {% else %}
-                        <td>No Driver</td>
-                    {% endif %}
+                    <td>{{booking.customer.customer_name | title}}</td>
                     <td>{{booking.startdate}}</td>
                     <td>{{booking.enddate}}</td>
                     {% if booking.is_cash %}
@@ -44,7 +40,7 @@ AXL Rental - Booking History
                     <td>₱{{booking.price}}</td>
                     <td>{{booking.booking_status}}</td>
                     <td>
-                        <a class="btn  btn-primary" href="{% url 'booking-details' booking.booking_id %}" >View Booking Details</a>
+                        <a class="btn  btn-primary" href="{% url 'booking-details' booking.booking_id %}">View Booking Details</a>
                     </td>
                 </tr>
                 {% endfor %}
