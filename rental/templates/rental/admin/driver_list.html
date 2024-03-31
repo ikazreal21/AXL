@@ -28,7 +28,7 @@ AXL Rental - Driver
                 {% for booking in drivers %}
                 <tr>
                     <td>{{booking.driver_name | title}}</td>
-                    <td>{{booking.driver_email | title}}</td>
+                    <td>{{booking.driver_email}}</td>
                     <td>{{booking.driver_phone}}</td>
                     <td>{{booking.driver_address}}</td>
                     <td>₱{{booking.price}}</td>
@@ -38,7 +38,11 @@ AXL Rental - Driver
                         <td>Not Available</td>
                     {% endif %}
                     <td>
+                        {% if booking.driver_license_valid_id %}
                         <a class="btn  btn-primary" href="{{booking.driver_license_valid_id.url}}" target="_blank">View License</a>
+                        {% else %}
+                        <p>No License Uploaded</p>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
