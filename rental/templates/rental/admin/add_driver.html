@@ -1,0 +1,54 @@
+{% extends 'rental/admin/admin_base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Add Driver
+
+{% endblock %} 
+
+
+{% block content %} 
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form action="" method="post">
+            {%csrf_token%}
+            <div class="form-group mb-3">
+                <input type="text" class="form-control" id="Username" placeholder="Username" name="username">
+            </div>
+            <div class="form-group mb-3">
+                <input type="text" class="form-control" id="Email" placeholder="Email address" name="email">
+            </div>
+            <div class="form-group mb-4">
+                <input type="password" class="form-control" id="Password" placeholder="Password" name="password1">
+            </div>
+            <div class="form-group mb-4">
+                <input type="password" class="form-control" id="Password" placeholder="Confirm Password" name="password2">
+            </div>
+            <!-- <button class="btn btn-primary btn-block mb-4">Sign up</button> -->
+            <input type="submit" class="btn btn-block btn-primary mb-4" value="Add Driver">
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<script src="{% static 'assets1/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery-migrate-3.0.1.min.js' %}"></script>
+<script src="{% static 'assets1/js/popper.min.js' %}j"></script>
+<script src="{% static 'assets1/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.easing.1.3.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.stellar.min.js' %}"></script>
+<script src="{% static 'assets1/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'assets1/js/aos.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.animateNumber.min.js' %}"></script>
+<script src="{% static 'assets1/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'assets1/js/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'assets1/js/scrollax.min.js' %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+<script src="{% static 'assets1/js/google-map.js' %}"></script>
+<script src="{% static 'assets1/js/main.js' %}"></script>
+
+{% endblock %}

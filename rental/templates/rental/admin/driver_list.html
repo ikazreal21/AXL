@@ -1,0 +1,50 @@
+{% extends 'rental/admin/admin_base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Driver
+
+{% endblock %} 
+
+
+{% block content %} 
+<a class="btn  btn-primary" href="{% url 'add-driver' %}" style="margin-bottom: 1rem;">Add Driver</a>
+<div class="card-body table-border-style">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Driver Name</th>
+                    <th>Driver Email</th>
+                    <th>Driver Phone</th>
+                    <th>Driver Address</th>
+                    <th>Driver Availability</th>
+                    <th>Driver Price</th>
+                    <th>Driver License</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in drivers %}
+                <tr>
+                    <td>{{booking.driver_name | title}}</td>
+                    <td>{{booking.driver_email | title}}</td>
+                    <td>{{booking.driver_phone}}</td>
+                    <td>{{booking.driver_address}}</td>
+                    <td>₱{{booking.price}}</td>
+                    {% if booking.driver_availability %}
+                        <td>Available</td>
+                    {% else %}
+                        <td>Not Available</td>
+                    {% endif %}
+                    <td>
+                        <a class="btn  btn-primary" href="{{booking.driver_license_valid_id.url}}" target="_blank">View License</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

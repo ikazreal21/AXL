@@ -1,0 +1,166 @@
+{% load static %}
+{% load pwa %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>      
+        {% block title %} 
+
+        AXL Rental Admin
+  
+        {% endblock %}
+    </title>
+    {% progressive_web_app_meta %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta content='yes' name='apple-mobile-web-app-capable'/>
+    <meta content='yes' name='mobile-web-app-capable'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{% static 'image/p.png' %}" type="image/png" />
+
+    <!-- prism css -->
+    <link rel="stylesheet" href="{% static 'assets2/css/plugins/prism-coy.css' %}">
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{% static 'assets2/css/style.css' %}">
+
+    <link
+    rel="stylesheet"
+    href="{% static 'assets1/css/bootstrap-datepicker.css' %}"
+  />
+  <link
+    rel="stylesheet"
+    href="{% static 'assets1/css/jquery.timepicker.css' %}"
+  />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    
+    
+
+</head>
+<body>
+    <nav class="pcoded-navbar theme-horizontal menu-light">
+        <div class="navbar-wrapper container">
+            <div class="navbar-content sidenav-horizontal" id="layout-sidenav">
+                <ul class="nav pcoded-inner-navbar sidenav-inner">
+                    <li class="nav-item pcoded-menu-caption">
+                    	<label>Dashboard</label>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'admin-dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Confirmed Booking</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'adminpending-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Booking</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'adminbooking-history' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'driver-list' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Drivers</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'car-list' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-navigation-2"></i></span><span class="pcoded-mtext">Cars</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'tracker' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-map-pin"></i></span><span class="pcoded-mtext">Tracker</span></a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+    <!-- [ navigation menu ] end -->
+    <!-- [ Header ] start -->
+    <header class="navbar pcoded-header navbar-expand-lg navbar-light header-dark">
+        <div class="container">
+            <div class="m-header">
+                <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
+                <a href="#!" class="b-brand">
+                    <!-- ========   change your logo hear   ============ -->
+                    <img src="{% static 'image/p.png' %}" alt="" class="logo" width="50" height="" style="margin-right: 1rem;">
+                    <h4 style="color: white;">AXL Rental</h4>
+                </a>
+                <a href="#!" class="mob-toggler">
+                    <i class="feather icon-more-vertical"></i>
+                </a>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li>
+                    <div class="dropdown drp-user">
+                        <a href="{% url 'logout' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-log-out"></i></span><span class="pcoded-mtext">Logout</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper container">
+            <div class="pcoded-content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+        <script src="{% static 'assets2/js/vendor-all.min.js' %}"></script>
+        <script src="{% static 'assets2/js/plugins/bootstrap.min.js' %}"></script>
+        <script src="{% static 'assets2/js/pcoded.min.js' %}"></script>
+
+
+    <!-- prism Js -->
+    <script src="{% static 'assets2/js/plugins/prism.js' %}"></script>
+
+    
+
+
+
+    <script src="{% static 'assets2/js/horizontal-menu.js' %}"></script>
+    <script>
+        (function() {
+            if ($('#layout-sidenav').hasClass('sidenav-horizontal') || window.layoutHelpers.isSmallScreen()) {
+                return;
+            }
+            try {
+                window.layoutHelpers._getSetting("Rtl")
+                window.layoutHelpers.setCollapsed(
+                    localStorage.getItem('layoutCollapsed') === 'true',
+                    false
+                );
+            } catch (e) {}
+        })();
+        $(function() {
+            $('#layout-sidenav').each(function() {
+                new SideNav(this, {
+                    orientation: $(this).hasClass('sidenav-horizontal') ? 'horizontal' : 'vertical'
+                });
+            });
+            $('body').on('click', '.layout-sidenav-toggle', function(e) {
+                e.preventDefault();
+                window.layoutHelpers.toggleCollapsed();
+                if (!window.layoutHelpers.isSmallScreen()) {
+                    try {
+                        localStorage.setItem('layoutCollapsed', String(window.layoutHelpers.isCollapsed()));
+                    } catch (e) {}
+                }
+            });
+        });
+        $(document).ready(function() {
+            $("#pcoded").pcodedmenu({
+                themelayout: 'horizontal',
+                MenuTrigger: 'hover',
+                SubMenuTrigger: 'hover',
+            });
+        });
+    </script>
+
+    <script src="{% static 'assets2/js/analytics.js' %}"></script>
+</body>
+
+</html>

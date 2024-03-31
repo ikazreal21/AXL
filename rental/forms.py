@@ -29,3 +29,9 @@ class DriverForm(ModelForm):
         model = Driver
         fields = '__all__'
         exclude = ['user', 'driver_id']
+
+class CarForm(ModelForm):
+    class Meta:
+        model = Cars
+        fields = '__all__'
+        exclude = ['car_id']

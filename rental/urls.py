@@ -10,6 +10,7 @@ urlpatterns = [
     path("", views.Home, name="home"),
     path("dashboard", views.CustomerDashboard, name="dashboard"),
     path("driver-dashboard", views.DriverDashboard, name="driver-dashboard"),
+    path("admin-dashboard", views.CurrentBookingAdmin, name="admin-dashboard"),
 
     # Customer
     path("book/<str:car_id>", views.CustomerBooking, name="book"),
@@ -24,6 +25,14 @@ urlpatterns = [
     path("profile", views.CustomerProfile, name="profile"),
 
     # Admin
+    path("adminbooking-history", views.AdminBookingHistory, name="adminbooking-history"),
+    path("adminpending-booking", views.AdminPendingBooking, name="adminpending-booking"),
+    path("adminbooking-details/<str:booking_id>", views.AdminBookingDetails, name="adminbooking-details"),
+    path("add-driver", views.AddDriver, name="add-driver"),
+    path("driver-list", views.DriverList, name="driver-list"),
+    path("add-car", views.AddCar, name="add-car"),
+    path("update-car/<str:car_id>", views.UpdateCar, name="update-car"),
+    path("car-list", views.CarList, name="car-list"),
     path("cancel-booking/<str:booking_id>", views.CancelBooking, name="cancel-booking"),
     path("confirm-booking/<str:booking_id>", views.ConfirmBooking, name="confirm-booking"),
 

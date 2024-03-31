@@ -1,3 +1,4 @@
+from calendar import c
 from dataclasses import is_dataclass
 from lib2to3.pgen2 import driver
 from multiprocessing import context
@@ -159,13 +160,6 @@ def BookingDetails(request, booking_id):
     return render(request, 'rental/customer/booking_details.html', context)
 
 @login_required(login_url='login')
-def ConfirmBooking(request, booking_id):
-    booking = Booking.objects.get(booking_id=booking_id)
-    booking.booking_status = "Confirmed"
-    booking.save()
-    return redirect('pending-booking')
-
-@login_required(login_url='login')
 def Billing(request, booking_id):
     booking = Booking.objects.get(booking_id=booking_id)
     if request.method == 'POST':
@@ -215,7 +209,104 @@ def CustomerProfile(request):
 def CurrentBookingAdmin(request):
     booking = Booking.objects.filter(booking_status="Confirmed")
     context = {'bookings': booking}
-    return render(request, 'rental/admin/current_booking.html', context)
+    return render(request, 'rental/admin/admin_dashboard.html', context)
+
+@login_required(login_url='login')
+def AdminPendingBooking(request):
+    booking = Booking.objects.filter(booking_status="Pending")
+    context = {'bookings': booking}
+    return render(request, 'rental/admin/pending_booking.html', context)
+
+@login_required(login_url='login')
+def ConfirmBooking(request, booking_id):
+    booking = Booking.objects.get(booking_id=booking_id)
+    booking.booking_status = "Confirmed"
+    booking.save()
+    return redirect('adminbooking-details', booking_id=booking_id)
+
+@login_required(login_url='login')
+def AdminBookingHistory(request):
+    booking = Booking.objects.filter(booking_status="Returned")
+    context = {'bookings': booking}
+    return render(request, 'rental/admin/admin_booking_history.html', context)
+
+@login_required(login_url='login')
+def AdminBookingDetails(request, booking_id):
+    booking = Booking.objects.get(booking_id=booking_id)
+    context = {'booking': booking}
+    return render(request, 'rental/admin/booking_details.html', context)
+
+@login_required(login_url='login')
+def AddDriver(request):
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save().is_customer = False
+            username = form.save()
+            user = form.cleaned_data.get('username')
+            Driver.objects.create(user=username)
+            messages.success(request, f'Account was created for {user}')
+            return redirect('driver-list')
+    context = {'form': form}
+    return render(request, 'rental/admin/add_driver.html', context)
+
+@login_required(login_url='login')
+def DriverList(request):
+    driver = Driver.objects.all()
+    context = {'drivers': driver}
+    return render(request, 'rental/admin/driver_list.html', context)
+
+@login_required(login_url='login')
+def AddCar(request):
+    form = CarForm()
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(commit=False).is_available = True
+            form.save()
+            return redirect('car-list')
+    context = {'form': form}
+    return render(request, 'rental/admin/add_car.html', context)
+
+@login_required(login_url='login')
+def UpdateCar(request, car_id):
+    car = Cars.objects.get(car_id=car_id)
+    form = CarForm(instance=car)
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES, instance=car)
+        if form.is_valid():
+            form.save()
+            return redirect('car-list')
+    context = {'form': form, 'customer': car}
+    return render(request, 'rental/admin/update_car.html', context)
+
+@login_required(login_url='login')
+def CarList(request):
+    car = Cars.objects.all()
+    context = {'cars': car}
+    return render(request, 'rental/admin/car_list.html', context)
+
+@login_required(login_url='login')
+def TrackCar(request):
+    # booking = Booking.objects.filter(booking_status="Confirmed")
+    car = Cars.objects.all()
+    device_name = "Device 1"
+    if request.method == 'POST':
+        car_id = request.POST.get("car")
+        device_name = Cars.objects.get(car_id=car_id).device_name
+        print(device_name)
+
+    url = f'https://tracker-a9fe1-default-rtdb.firebaseio.com/locations/{device_name}.json?auth=TRLIkBzUyzxK37fOK2rRTWdjoZjosKEhzPlIMfAa'
+    location = requests.get(url) 
+    location = location.json()
+    print(location)
+    lat = location['lat']
+    lng = location['lng']
+    print(lat)
+    print(lng)
+    context = {'lat': lat, 'lng': lng, 'cars': car}
+    return render(request, 'rental/maps.html', context)
 
 # Driver
 @login_required(login_url='login')
@@ -245,27 +336,6 @@ def PendingDriverBooking(request):
     context = {'bookings': booking}
     return render(request, 'rental/driver/pending_booking.html', context)
 
-# @login_required(login_url='login')
-# def CurrentDriverBooking(request):
-
-#     return render(request, 'rental/driver/current_booking.html', context)
-
-
-@login_required(login_url='login')
-def TrackCar(request):
-    # booking = Booking.objects.filter(booking_status="Confirmed")
-    device_name = "Device 2"
-    url = f'https://tracker-a9fe1-default-rtdb.firebaseio.com/locations/{device_name}.json?auth=TRLIkBzUyzxK37fOK2rRTWdjoZjosKEhzPlIMfAa'
-    location = requests.get(url) 
-    location = location.json()
-    lat = location['lat']
-    lng = location['lng']
-    print(lat)
-    print(lng)
-    context = {'lat': lat, 'lng': lng}
-    return render(request, 'rental/maps.html', context)
-
-
 # AUTH
 def Register(request):
     form = CreateUserForm()
@@ -282,7 +352,9 @@ def Register(request):
 
 def Login(request):
     if request.user.is_authenticated:
-        if request.user.is_customer:
+        if request.user.is_superuser:
+            return redirect('admin-dashboard')
+        elif request.user.is_customer:
             return redirect('dashboard')
         else:
             return redirect('driver-dashboard')
@@ -291,6 +363,12 @@ def Login(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         custominfo = CustomUser.objects.get(username=user)
+        if custominfo.is_superuser:
+            if user is not None:
+                login(request, user)
+                return redirect('admin-dashboard')
+            else:
+                messages.info(request, 'Username OR password is incorrect')
         if custominfo.is_customer:
             userDet = Customer.objects.get(user=user)
             profile_redirect = 'profile'

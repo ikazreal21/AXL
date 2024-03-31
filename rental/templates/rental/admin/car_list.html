@@ -1,0 +1,34 @@
+{% extends 'rental/admin/admin_base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+AXL Rental - Car List
+
+{% endblock %} 
+
+
+{% block content %} 
+
+<h1>Cars</h1>
+<a class="btn  btn-primary" href="{% url 'add-car' %}" style="margin-bottom: 1rem;">Add Car</a>
+<div class="row"> 
+    {% for car in cars %}
+    <div class="col-sm-3">
+        <div class="card">
+            <img class="img-fluid card-img-top" src="{{car.car_image.url}}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{car.car_name}}</h5>
+                <p class="card-text"><b>{{car.car_license_plate}}</b></p>
+                <p class="card-text"><b>Device Name: {{car.device_name}}</b></p>
+                <h4 class="card-text"><b>₱{{car.price}}</b></h4>
+
+                <!-- <a class="btn  btn-primary" href="{% url 'book' car.car_id %}">Book</a> -->
+                <a class="btn btn-danger" href="{% url 'update-car' car.car_id %}">Update Car</a>
+            </div>
+        </div>
+    </div>    
+    {% endfor %}
+</div>
+
+{% endblock %}

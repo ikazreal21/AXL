@@ -1,4 +1,4 @@
-{% extends 'rental/base.html' %} 
+{% extends 'rental/admin/admin_base.html' %} 
 {% load static %}
 
 {% block title %} 
@@ -21,8 +21,24 @@ AXL Rental - Track Car
 </style>
 
 <h1>Maps</h1>
+<div class="col-md-12">
+    <form method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="form-group" id="driver_select">
+            <label for="exampleFormControlSelect1">Pick a Driver</label>
+            <select class="form-control" id="exampleFormControlSelect1" name="car">
+                {% for car in cars %}
+                    <option value="{{car.car_id}}">{{car.car_name}} - {{car.device_name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn  btn-primary" style="margin-bottom: 1rem;">Book the Car</button>
+    </form>
+</div>
+
+
 <!-- <div class="row"> -->
-    <div id="map" style='height:400px'></div>
+<div id="map" style='height:400px'></div>
 <!-- </div> -->
 <script>
     const lng = '{{lng}}';
@@ -50,5 +66,6 @@ AXL Rental - Track Car
     // make a marker for each feature and add to the map
     new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
 </script>
+
 
 {% endblock %}
