@@ -163,14 +163,14 @@ PWA_APP_START_URL = '/'
 PWA_APP_STATUS_BAR_COLOR = 'default'
 PWA_APP_ICONS = [
     {
-        'src': '/static/image/p.png',
-        'sizes': '160x160'
+        'src': '/static/image/android-launchericon-512-512.png',
+        'sizes': '512x512'
     }
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        'src': '/static/image/p.png',
-        'sizes': '160x160'
+        'src': '/static/image/android-launchericon-512-512.png',
+        'sizes': '512x512'
     }
 ]
 PWA_APP_SPLASH_SCREEN = [
