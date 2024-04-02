@@ -402,15 +402,13 @@ def TermsAndConditions(request):
 
 # AssetLink
 def AssetLink(request):
-    assetlink = [
-        {
-            "relation": ["delegate_permission/common.handle_all_urls"],
-            "target": {
-            "namespace": "android_app",
-            "package_name": "xyz.appmaker.afoibq",
-            "sha256_cert_fingerprints": ["24:A2:F9:9C:3C:64:B9:80:AD:DB:5B:A6:36:A7:C9:21:CF:5F:DE:43:27:98:14:D5:A8:B2:24:D0:1F:9F:21:BF"]
-            }
-        }
-    ]
+    assetlink = [{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.herokuapp.axl_rentals_f3b7283f1ce7.twa",
+        "sha256_cert_fingerprints": ["5D:21:35:E9:AC:5F:E3:22:E4:CE:F8:F2:D3:E0:BB:56:C7:CB:5E:C3:FE:5A:FF:E7:29:E9:2D:7C:79:E2:88:BD"]
+      }
+    }]
 
     return JsonResponse(assetlink, safe=False)
