@@ -15,6 +15,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import date, datetime
 from pytz import timezone
 
+from django.http import JsonResponse
+
 import requests 
 from django.db.models import Q
 
@@ -397,3 +399,18 @@ def Logout(request):
 # Terms and Conditions
 def TermsAndConditions(request):
     return render(request, 'rental/termsandcondition.html')
+
+# AssetLink
+def AssetLink(request):
+    assetlink = [
+        {
+            "relation": ["delegate_permission/common.handle_all_urls"],
+            "target": {
+            "namespace": "android_app",
+            "package_name": "xyz.appmaker.afoibq",
+            "sha256_cert_fingerprints": ["24:A2:F9:9C:3C:64:B9:80:AD:DB:5B:A6:36:A7:C9:21:CF:5F:DE:43:27:98:14:D5:A8:B2:24:D0:1F:9F:21:BF"]
+            }
+        }
+    ]
+
+    return JsonResponse(assetlink, safe=False)

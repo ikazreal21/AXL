@@ -54,4 +54,7 @@ urlpatterns = [
 
     # Maps
     path("tracker", views.TrackCar, name="tracker"),
+
+    # AssetLink
+    path(".well-known/assetlinks.json", views.AssetLink),
 ]
