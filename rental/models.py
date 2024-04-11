@@ -19,6 +19,8 @@ class Cars(models.Model):
     car_model = models.CharField(max_length=255, null=True, blank=True)
     car_license_plate = models.CharField(max_length=255, null=True, blank=True)
     car_price = models.IntegerField()
+    car_color = models.CharField(max_length=255, null=True, blank=True)
+    car_seater = models.IntegerField(null=True, blank=True)
     car_image = models.ImageField(upload_to='uploads/cars', null=True, blank=True)
     is_available = models.BooleanField(default=True)
     device_name = models.CharField(max_length=255, null=True, blank=True)

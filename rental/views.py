@@ -393,7 +393,7 @@ def Login(request):
 
 def Logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
 
 
 # Terms and Conditions
