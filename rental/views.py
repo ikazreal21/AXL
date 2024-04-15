@@ -400,6 +400,10 @@ def Logout(request):
 def TermsAndConditions(request):
     return render(request, 'rental/termsandcondition.html')
 
+# Privacy and Policy
+def PrivacyPolicy(request):
+    return render(request, 'rental/privacyandpolicy.html')
+
 # AssetLink
 def AssetLink(request):
     assetlink = [{

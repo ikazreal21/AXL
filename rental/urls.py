@@ -52,6 +52,9 @@ urlpatterns = [
     # Terms and Conditions
     path("terms-and-conditions", views.TermsAndConditions, name="terms-and-conditions"),
 
+    # Privacy Policy
+    path("privacy-policy", views.PrivacyPolicy, name="privacy-policy"),
+
     # Maps
     path("tracker", views.TrackCar, name="tracker"),
 
