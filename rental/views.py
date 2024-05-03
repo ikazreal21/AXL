@@ -311,7 +311,7 @@ def ConfirmBooking(request, booking_id):
             </html>
         """
     
-    recepients = [booking.customer.user.email, ]
+    recepients = [booking.customer.customer_email, ]
                 
     send_email(subject, message, recepients)
 
