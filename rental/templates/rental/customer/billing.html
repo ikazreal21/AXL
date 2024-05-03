@@ -47,20 +47,30 @@ AXL Rental - GCash Billing Page
             <h5><strong>Schedule:</strong> {{booking.description}}</h5>
         </div>
         <div class="billing-instructions">
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
+                <style>
+                    .billing li {
+                        font-size: 20px;
+                    }
+                </style>
                 {% csrf_token %}
                 <h2>Payment Instructions</h2>
                 <p>To complete the payment using GCash, follow these steps:</p>
-                <ol>
-                    <li>Open the GCash app on your mobile device.</li>
-                    <li>Select 'Send Money' from the main menu.</li>
-                    <li>Enter the GCash number: <strong>Enter GCash Number Here</strong>.</li>
+                <ol class="billing">
+                    <li>Open your GCash App.</li>
+                    <li>Scan QR</li>
+                    <img src="{% static 'image/p.png' %}" height="400" width="400" alt="">
                     {% if booking.booking_status == "Late" %}
                     <li>Enter the amount to pay  <strong>(₱{{booking.penalty}})</strong>.</li>
                     {% else %}
                     <li>Enter the amount to pay  <strong>(₱{{booking.price}})</strong>.</li>
                     {% endif %}
-                    <li>Enter the reference number: <input type="text" id="referenceNumber" placeholder="Enter Reference Number" name="reference_number" required /></li>
+                    <li>Attach a screenshot of the transaction.</li>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="valid_id" name="reference_proof" required>
+                            <label class="custom-file-label" for="valid_id">Choose file</label>
+                        </div>
+                    </li>
                     <li>Confirm the transaction.</li>
                     <li>Once payment is successful, your order will be processed.</li>
                 </ol>

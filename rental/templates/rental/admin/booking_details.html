@@ -37,6 +37,11 @@ AXL Rental - Details
         <div class="billing-header">
             <h1>Booking Details</h1>
         </div>
+        <style>
+            .billing-details a {
+                margin: 10px
+            }
+        </style>
         <div class="billing-details">
             <h2>Transaction Details</h2>
             <img src="{{booking.car.car_image.url}}" alt="" srcset="" width="300" height="300">
@@ -50,8 +55,11 @@ AXL Rental - Details
             
 
             <a href="{% url 'admin-dashboard' %}" class="btn btn-primary">Back</a>
+            {% if booking.reference_proof %}
+                <a href="{{booking.reference_proof.url}}" class="btn btn-primary" target="_blank">View GCash Payment</a>
+            {% endif %}
             {% if booking.customer_license_id %}
-                <img href="{{booking.customer_license_id.url}}" class="btn btn-primary" target="_blank">View License</img>
+                <a href="{{booking.customer_license_id.url}}" class="btn btn-primary" target="_blank">View License</a>
             {% elif booking.customer_valid_id %}
                 <a href="{{booking.customer_valid_id.url}}" class="btn btn-primary" target="_blank">View Valid ID</a>
             {% endif %}

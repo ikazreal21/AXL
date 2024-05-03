@@ -22,6 +22,9 @@ from django.db.models import Q
 
 from .models import *
 from .forms import *
+from .utils import *
+
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 def Home(request):
     car = Cars.objects.filter(is_available=True).all()
@@ -29,6 +32,8 @@ def Home(request):
     # print(date.date())
     context = {'cars': car}
     if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin-dashboard')
         if request.user.is_customer:
             return redirect('dashboard')
         else:
@@ -165,12 +170,14 @@ def BookingDetails(request, booking_id):
 def Billing(request, booking_id):
     booking = Booking.objects.get(booking_id=booking_id)
     if request.method == 'POST':
-        reference_number = request.POST.get("reference_number")
+        reference_proof = request.FILES.get("reference_proof")
         if booking.booking_status == "Late": 
-           booking.reference_number_penalty = reference_number
-           booking.booking_status = "Returned"
+            reference_proof_cloudinary = MediaCloudinaryStorage().save(reference_proof.name, reference_proof)
+            booking.reference_number_penalty = reference_proof_cloudinary
+            booking.booking_status = "Returned"
         else:    
-            booking.reference_number = reference_number
+            reference_proof_cloudinary = MediaCloudinaryStorage().save(reference_proof.name, reference_proof)
+            booking.reference_proof = reference_proof_cloudinary
         booking.save()
         return redirect('dashboard')
     context = {'booking': booking}
@@ -222,8 +229,94 @@ def AdminPendingBooking(request):
 @login_required(login_url='login')
 def ConfirmBooking(request, booking_id):
     booking = Booking.objects.get(booking_id=booking_id)
+    date = datetime.now(timezone('Asia/Manila'))
+    invoice_number = str(booking.booking_id)
+    invoice_number = invoice_number.split("-")
+    invoice_number = invoice_number[0].upper()
     booking.booking_status = "Confirmed"
     booking.save()
+    subject = f"Booking Confirmation - {invoice_number}"
+    message = f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Invoice</title>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                    }}
+                    .invoice {{
+                        max-width: 600px;
+                        margin: 0 auto;
+                        border: 1px solid #ccc;
+                        border-radius: 10px;
+                        padding: 20px;
+                        background-color: #f9f9f9;
+                    }}
+                    .invoice-header {{
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }}
+                    .invoice-details {{
+                        margin-bottom: 20px;
+                    }}
+                    .invoice-details strong {{
+                        display: block;
+                        margin-bottom: 5px;
+                    }}
+                    .invoice-footer {{
+                        text-align: right;
+                    }}
+                    @media print {{
+                        .print-button {{
+                            display: none !important; /* Hide the print button when printing */
+                        }}
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="invoice">
+                    <div class="invoice-header">
+                        <h1>Invoice</h1>
+                        <p>Invoice Number: {invoice_number}</p>
+                        <p>Date: {date}</p>
+                    </div>
+                    <div class="invoice-details">
+                        <strong>Billed To:</strong>
+                        <p>Name: {booking.customer.customer_name}</p>
+                        <p>Address: {booking.customer.customer_address}</p>
+                        <p>Email: {booking.customer.customer_email}</p>
+                    </div>
+                    { f'''<div class="invoice-details">
+                        <strong>Driver Details:</strong>
+                        <p>Driver Name: {booking.driver.driver_name}</p>
+                        <p>Address: {booking.driver.driver_address}</p>
+                        <p>Email: {booking.driver.driver_email}</p>
+                    </div>''' if booking.driver else '' }
+                    <div class="invoice-details">
+                        <strong>Invoice Details:</strong>
+                        <p>Description: {booking.car.car_name}</p>
+                        <p>Total Penalty: ₱{booking.penalty() if booking.total_penalty else '0.00' }</p>
+                        <p>Total Booking Amount: ₱{booking.price()}</p>
+                    </div>
+
+                    <div class="invoice-footer">
+                        <p><strong>Total:  ₱{booking.total()}</strong></p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        """
+    
+    recepients = [booking.customer.user.email, ]
+                
+    send_email(subject, message, recepients)
+
+
+
     return redirect('adminbooking-details', booking_id=booking_id)
 
 @login_required(login_url='login')
