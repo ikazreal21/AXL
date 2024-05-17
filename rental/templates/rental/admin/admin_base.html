@@ -43,7 +43,36 @@
 
 </head>
 <body>
-    <nav class="pcoded-navbar theme-horizontal menu-light">
+    <nav class="pcoded-navbar menu-light">
+        <div class="navbar-wrapper">
+            <div class="navbar-content scroll-div">
+                <ul class="nav pcoded-inner-navbar">
+                    <li class="nav-item pcoded-menu-caption">
+                    	<label>Dashboard</label>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'admin-dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Confirmed Booking</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'adminpending-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Booking</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'adminbooking-history' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'driver-list' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Drivers</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'car-list' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-navigation-2"></i></span><span class="pcoded-mtext">Cars</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'tracker' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-map-pin"></i></span><span class="pcoded-mtext">Tracker</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- <nav class="pcoded-navbar theme-horizontal menu-light">
         <div class="navbar-wrapper container">
             <div class="navbar-content sidenav-horizontal" id="layout-sidenav">
                 <ul class="nav pcoded-inner-navbar sidenav-inner">
@@ -72,7 +101,7 @@
 
             </div>
         </div>
-    </nav>
+    </nav> -->
     <!-- [ navigation menu ] end -->
     <!-- [ Header ] start -->
     <header class="navbar pcoded-header navbar-expand-lg navbar-light header-dark">

@@ -43,7 +43,54 @@
 
 </head>
 <body>
-    <nav class="pcoded-navbar theme-horizontal menu-light">
+    <nav class="pcoded-navbar menu-light">
+        <div class="navbar-wrapper">
+            <div class="navbar-content scroll-div">
+                <ul class="nav pcoded-inner-navbar">
+                    <li class="nav-item pcoded-menu-caption">
+                    	<label>Dashboard</label>
+                    </li>
+                    {% if request.user.is_customer %}   
+                        {% if request.user.customer.is_first_time %}
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'pending-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Bookings</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'booking-history' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'late-return' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-info"></i></span><span class="pcoded-mtext">Late Return</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'current-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-check"></i></span><span class="pcoded-mtext">Return My Car</span></a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        {% if request.user.driver.is_first_time %}
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'driver-dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Current Booking</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'pending-driver-booking' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Pending Bookings</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'driver-booking-history' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-bookmark"></i></span><span class="pcoded-mtext">Booking History</span></a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-check"></i></span><span class="pcoded-mtext">Availability</span></a>
+                            </li> -->
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- <nav class="pcoded-navbar theme-horizontal menu-light">
         <div class="navbar-wrapper container">
             <div class="navbar-content sidenav-horizontal" id="layout-sidenav">
                 <ul class="nav pcoded-inner-navbar sidenav-inner">
@@ -90,7 +137,7 @@
 
             </div>
         </div>
-    </nav>
+    </nav> -->
     <!-- [ navigation menu ] end -->
     <!-- [ Header ] start -->
     <header class="navbar pcoded-header navbar-expand-lg navbar-light header-dark">
